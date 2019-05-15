@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Soontao/PDISolution/oauth"
+	"github.com/Soontao/PDISolution/modules/oauth"
 
 	"github.com/gin-gonic/gin"
 )
