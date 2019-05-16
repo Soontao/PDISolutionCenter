@@ -1,17 +1,24 @@
 package main
 
 import (
-	"github.com/Soontao/PDISolution/modules/oauth"
+	"log"
+	"os"
 
-	"github.com/gin-gonic/gin"
+	"github.com/urfave/cli"
 )
 
 func main() {
 
-	r := gin.Default()
+	app := cli.NewApp()
 
-	oauth.WithOAuth(r)
+	app.Flags = options
 
-	r.Run("0.0.0.0:18080")
+	app.Action = RunServer
+
+	err := app.Run(os.Args)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }

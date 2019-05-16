@@ -1,8 +1,6 @@
 package models
 
 import (
-	"os"
-
 	"github.com/jinzhu/gorm"
 )
 
@@ -14,24 +12,23 @@ const (
 )
 
 // CreateDB instance
-func CreateDB() (*gorm.DB, error) {
-	dialet := os.Getenv(KeyDatabaseType)
-	connStr := os.Getenv(KeyConnectionString)
+func CreateDB(dialect, connStr string) (*gorm.DB, error) {
 
-	if dialet == "" {
-		dialet = "sqlite3"
+	if dialect == "" {
+		dialect = "sqlite3"
 	}
+
 	if connStr == "" {
 		connStr = ":memory:"
 	}
 
-	db, err := gorm.Open(dialet, connStr)
+	db, err := gorm.Open(dialect, connStr)
 
 	if err != nil {
 		return nil, err
 	}
 
-	db.AutoMigrate(&User{}, &Tenant{}, &Solution{})
+	db.AutoMigrate(&User{}, &Tenant{}, &Solution{}, &JobRunLog{}, &Schedule{})
 
 	return db, err
 

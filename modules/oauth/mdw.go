@@ -3,40 +3,64 @@ package oauth
 import (
 	"fmt"
 
-	"github.com/gin-contrib/sessions/memstore"
-
-	"github.com/gin-contrib/sessions"
-
 	"github.com/gin-gonic/gin"
 	"github.com/imroc/req"
 	"golang.org/x/oauth2"
 )
 
-// WithOAuth config
-func WithOAuth(e *gin.Engine) (rt error) {
+// ServerOAuthConfig type
+type ServerOAuthConfig struct {
+	AuthURL        string
+	TokenURL       string
+	UserAPI        string
+	ClientID       string
+	ClientSecret   string
+	CallbackPath   string
+	OnUserReceived func(*gin.Context, SSOUser) error
+	OnCheckUser    func(*gin.Context) bool
+}
 
-	endpoint := oauth2.Endpoint{
-		AuthURL:  "https://github.tools.sap/login/oauth/authorize",
-		TokenURL: "https://github.tools.sap/login/oauth/access_token",
+// GithubGetUserAPI func
+func GithubGetUserAPI(userAPI, token string) (rt *GithubUser, err error) {
+
+	res, err := req.Get(userAPI, req.Header{"Authorization": fmt.Sprintf("token %s", token)})
+	if err != nil {
+		return nil, err
 	}
+	rt = &GithubUser{}
+	err = res.ToJSON(rt)
+	if err != nil {
+		return nil, err
+	}
+	return rt, err
+}
 
-	userAPI := "https://github.tools.sap/api/v3/user"
+// WithOAuth config
+func WithOAuth(e *gin.Engine, config *ServerOAuthConfig) (rt error) {
 
 	oauth2Config := &oauth2.Config{
-		ClientID:     "",
-		ClientSecret: "",
-		RedirectURL:  "http://localhost:18080/oauth/callback",
+		ClientID:     config.ClientID,
+		ClientSecret: config.ClientSecret,
 		Scopes:       []string{},
-		Endpoint:     endpoint,
+		Endpoint: oauth2.Endpoint{
+			AuthURL:  config.AuthURL,
+			TokenURL: config.TokenURL,
+		},
 	}
 
-	store := memstore.NewStore([]byte("secret"))
-
-	e.Use(sessions.Sessions("session", store))
-
-	e.GET("/oauth/callback", func(c *gin.Context) {
+	e.GET(config.CallbackPath, func(c *gin.Context) {
 
 		code := c.Query("code")
+
+		state := c.Query("state")
+
+		if code == "" {
+			c.AbortWithError(400, fmt.Errorf("Bad OAuth Callback Request"))
+		}
+
+		if state == "" {
+			state = "/"
+		}
 
 		token, err := oauth2Config.Exchange(oauth2.NoContext, code)
 
@@ -44,28 +68,25 @@ func WithOAuth(e *gin.Engine) (rt error) {
 			c.AbortWithError(500, err)
 		}
 
-		res, err := req.Get(userAPI, req.Header{"Authorization": fmt.Sprintf("token %s", token.AccessToken)})
+		user, err := GithubGetUserAPI(config.UserAPI, token.AccessToken)
 
 		if err != nil {
 			c.AbortWithError(500, err)
 		}
 
-		uString, _ := res.ToString()
+		config.OnUserReceived(c, *user)
 
-		session := sessions.Default(c)
-		session.Set("user", uString)
-		session.Save()
-
-		c.Redirect(302, "/")
+		c.Redirect(302, state)
 
 	})
 
 	e.Use(func(c *gin.Context) {
 
-		if sessions.Default(c).Get("user") == nil {
-			c.Redirect(302, oauth2Config.AuthCodeURL("0000"))
-		} else {
+		if config.OnCheckUser(c) {
 			c.Next()
+		} else {
+			// set state as original request uri
+			c.Redirect(302, oauth2Config.AuthCodeURL(c.Request.RequestURI))
 		}
 
 	})

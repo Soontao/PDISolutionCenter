@@ -12,6 +12,13 @@ func (r *GithubUser) Marshal() ([]byte, error) {
 	return json.Marshal(r)
 }
 
+// SSOUser interface
+type SSOUser interface {
+	GetFederationID() string
+	GetUserName() string
+	GetEmail() string
+}
+
 // GithubUser type
 type GithubUser struct {
 	// Login ID
@@ -49,4 +56,19 @@ type GithubUser struct {
 	CreatedAt   string      `json:"created_at"`
 	UpdatedAt   string      `json:"updated_at"`
 	SuspendedAt interface{} `json:"suspended_at"`
+}
+
+// GetFederationID
+func (gu GithubUser) GetFederationID() string {
+	return gu.Login
+}
+
+// GetUserName
+func (gu GithubUser) GetUserName() string {
+	return gu.Name
+}
+
+// GetEmail
+func (gu GithubUser) GetEmail() string {
+	return gu.Email
 }
