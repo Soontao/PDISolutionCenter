@@ -18,8 +18,19 @@ var options = []cli.Flag{
 	cli.StringFlag{
 		Name:   "oauth_client_id",
 		EnvVar: "OAUTH_CLIENT_ID",
-	}, cli.StringFlag{
+	},
+	cli.StringFlag{
 		Name:   "oauth_client_secret",
 		EnvVar: "OAUTH_CLIENT_SECRET",
+	},
+	cli.StringFlag{
+		Name:   "db_type",
+		EnvVar: "DATABASE_TYPE",
+		Value:  "sqlite3",
+	},
+	cli.StringFlag{
+		Name:   "db_conn",
+		EnvVar: "DATABASE_CONNSTR",
+		Value:  ":memory:",
 	},
 }

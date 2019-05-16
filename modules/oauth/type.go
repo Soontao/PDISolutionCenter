@@ -2,6 +2,11 @@ package oauth
 
 import "encoding/json"
 
+const (
+	// KeyFedID session key
+	KeyFedID = "FederationID"
+)
+
 func UnmarshalGithubUser(data []byte) (GithubUser, error) {
 	var r GithubUser
 	err := json.Unmarshal(data, &r)

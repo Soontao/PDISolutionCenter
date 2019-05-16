@@ -1,21 +1,23 @@
 package main
 
 import (
+	"github.com/Soontao/PDISolution/models"
 	"github.com/Soontao/PDISolution/modules/memsession"
 	"github.com/Soontao/PDISolution/modules/oauth"
+	"github.com/Soontao/PDISolution/routes"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli"
 )
 
-const (
-	// KeyFedID session key
-	KeyFedID = "FederationID"
-)
-
 // RunServer func
 func RunServer(c *cli.Context) (err error) {
 
+	db, err := models.CreateDB(c.GlobalString("db_type"), c.GlobalString("db_conn"))
+
+	if err != nil {
+		return err
+	}
 	// new server instance
 	r := gin.Default()
 
@@ -33,13 +35,13 @@ func RunServer(c *cli.Context) (err error) {
 		OnUserReceived: func(c *gin.Context, u oauth.SSOUser) (rt error) {
 			session := sessions.Default(c)
 			// set fed id
-			session.Set(KeyFedID, u.GetFederationID())
+			session.Set(oauth.KeyFedID, u.GetFederationID())
 			session.Save()
 			return rt
 		},
 		OnCheckUser: func(c *gin.Context) (rt bool) {
 			session := sessions.Default(c)
-			if session.Get(KeyFedID) == nil {
+			if session.Get(oauth.KeyFedID) == nil {
 				rt = false
 			} else {
 				// do more check
@@ -51,6 +53,9 @@ func RunServer(c *cli.Context) (err error) {
 
 	// with oauth config
 	oauth.WithOAuth(r, oConfig)
+
+	// mount all routes
+	routes.WithRoutes(r, db)
 
 	// start server
 	err = r.Run("0.0.0.0:18080")
