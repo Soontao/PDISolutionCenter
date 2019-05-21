@@ -15,7 +15,7 @@ COPY . .
 RUN go build -mod=vendor -o=app .
 
 # fetch frontend release
-RUN wget https://github.com/Soontao/PDISolutionCenterFront/releases/download/v1.1.1/dist.zip
+RUN wget https://github.com/Soontao/PDISolutionCenterFront/releases/download/v1.1.3/dist.zip
 RUN unzip dist.zip
 
 # distribution image
