@@ -12,7 +12,7 @@ WORKDIR /app
 COPY . .
 
 # vendor build only can be executed outside the GOPATH
-RUN go build -mod=vendor .
+RUN go build -mod=vendor -o=app .
 
 # fetch frontend release
 RUN wget https://github.com/Soontao/PDISolutionCenterFront/releases/download/v1.1.1/dist.zip
@@ -26,7 +26,7 @@ FROM alpine:3.9
 RUN apk --no-cache add ca-certificates
 
 COPY --from=build-env /app/app .
-COPY --from=build-env /app/app/static ./static
+COPY --from=build-env /app/static ./static
 
 # start
 CMD ["./app"]
