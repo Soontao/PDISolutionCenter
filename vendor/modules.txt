@@ -3,6 +3,8 @@ github.com/gin-contrib/sessions
 github.com/gin-contrib/sessions/memstore
 # github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3
 github.com/gin-contrib/sse
+# github.com/gin-gonic/contrib v0.0.0-20190510065052-87e961e51ccc
+github.com/gin-gonic/contrib/static
 # github.com/gin-gonic/gin v1.4.0
 github.com/gin-gonic/gin
 github.com/gin-gonic/gin/binding

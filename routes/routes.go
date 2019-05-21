@@ -8,8 +8,11 @@ import (
 // WithRoutes func
 func WithRoutes(e *gin.Engine, db *gorm.DB) {
 
+	// api root
+	api := e.Group("/api/v1")
+
 	// userGroup
-	userGroup := e.Group("/user")
+	userGroup := api.Group("/user")
 	userGroup.GET("/", WithDatabaseAndSession(db, UserEndpoint))
 
 }

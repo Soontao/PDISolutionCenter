@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-gonic/contrib/static"
 	"github.com/Soontao/PDISolution/models"
 	"github.com/Soontao/PDISolution/modules/memsession"
 	"github.com/Soontao/PDISolution/modules/oauth"
@@ -56,6 +57,9 @@ func RunServer(c *cli.Context) (err error) {
 
 	// mount all routes
 	routes.WithRoutes(r, db)
+
+	// with static sources
+	r.Use(static.Serve("/", static.LocalFile("./static", true)))
 
 	// start server
 	err = r.Run("0.0.0.0:18080")

@@ -29,6 +29,8 @@ github.com/gin-contrib/sessions v0.0.0-20190512062852-3cb4c4f2d615 h1:2KRlm9Qh15
 github.com/gin-contrib/sessions v0.0.0-20190512062852-3cb4c4f2d615/go.mod h1:iziXm/6pvTtf7og1uxT499sel4h3S9DfwsrhNZ+REXM=
 github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3 h1:t8FVkw33L+wilf2QiWkw0UV77qRpcH/JHPKGpKa2E8g=
 github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3/go.mod h1:VJ0WA2NBN22VlZ2dKZQPAPnyWw5XTlK1KymzLKsr59s=
+github.com/gin-gonic/contrib v0.0.0-20190510065052-87e961e51ccc h1:t2uq96phbA3O6l2GdcZXEqQP1yPYTRMgysyZj9nJqTE=
+github.com/gin-gonic/contrib v0.0.0-20190510065052-87e961e51ccc/go.mod h1:iqneQ2Df3omzIVTkIfn7c1acsVnMGiSLn4XF5Blh3Yg=
 github.com/gin-gonic/gin v1.4.0 h1:3tMoCCfM7ppqsR0ptz/wi1impNpT7/9wQtMZ8lr1mCQ=
 github.com/gin-gonic/gin v1.4.0/go.mod h1:OW2EZn3DO8Ln9oIKOvM++LBO+5UPHJJDH72/q/3rZdM=
 github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8/go.mod h1:xkRDCp4j0OGD1HRkm4kmhM+pmpv3AKq5SU7GMg4oO/Q=
