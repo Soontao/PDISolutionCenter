@@ -3,7 +3,7 @@ FROM golang:1.12-alpine3.9 AS build-env
 
 # install build tools
 RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh wget unzip
+    apk add --no-cache bash git openssh wget unzip gcc
 
 # build
 WORKDIR /app
