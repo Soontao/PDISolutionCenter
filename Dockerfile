@@ -17,7 +17,6 @@ RUN go build -mod=vendor -o=app .
 # fetch frontend release
 RUN wget https://github.com/Soontao/PDISolutionCenterFront/releases/download/v1.1.1/dist.zip
 RUN unzip dist.zip
-RUN cp -R dist/ static/ 
 
 # distribution image
 FROM alpine:3.9
@@ -26,7 +25,7 @@ FROM alpine:3.9
 RUN apk --no-cache add ca-certificates
 
 COPY --from=build-env /app/app .
-COPY --from=build-env /app/static ./static
+COPY --from=build-env /app/dist ./static
 
 # start
 CMD ["./app"]
