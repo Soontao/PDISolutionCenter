@@ -1,11 +1,12 @@
 package main
 
 import (
+	"github.com/Soontao/PDISolutionCenter/modules/pdiclients"
 	"github.com/gin-gonic/contrib/static"
-	"github.com/Soontao/PDISolution/models"
-	"github.com/Soontao/PDISolution/modules/memsession"
-	"github.com/Soontao/PDISolution/modules/oauth"
-	"github.com/Soontao/PDISolution/routes"
+	"github.com/Soontao/PDISolutionCenter/models"
+	"github.com/Soontao/PDISolutionCenter/modules/memsession"
+	"github.com/Soontao/PDISolutionCenter/modules/oauth"
+	"github.com/Soontao/PDISolutionCenter/routes"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli"
@@ -13,6 +14,8 @@ import (
 
 // RunServer func
 func RunServer(c *cli.Context) (err error) {
+
+	clients := &pdiclients.PDIClients{}
 
 	db, err := models.CreateDB(c.GlobalString("db_type"), c.GlobalString("db_conn"))
 
@@ -56,7 +59,7 @@ func RunServer(c *cli.Context) (err error) {
 	oauth.WithOAuth(r, oConfig)
 
 	// mount all routes
-	routes.WithRoutes(r, db)
+	routes.WithRoutes(r, db, clients)
 
 	// with static sources
 	r.Use(static.Serve("/", static.LocalFile("./static", true)))
