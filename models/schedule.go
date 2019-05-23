@@ -2,6 +2,20 @@ package models
 
 import "time"
 
+// ScheduleType enum
+type ScheduleType string
+
+const (
+	// ScheduleTypeBuildCheck enum value
+	ScheduleTypeBuildCheck = ScheduleType("buildcheck")
+	// ScheduleTypeDeployOnly enum value
+	ScheduleTypeDeployOnly = ScheduleType("deploy")
+	// ScheduleTypeBuildOnly enum value
+	ScheduleTypeBuildOnly = ScheduleType("buildonly")
+	// ScheduleTypeBuildDeploy enum value
+	ScheduleTypeBuildDeploy = ScheduleType("builddeploy")
+)
+
 // Schedule type
 type Schedule struct {
 	BaseModel
@@ -10,5 +24,10 @@ type Schedule struct {
 	TargetRunTime *time.Time
 	Solution      *Solution
 	TargetTenant  *Tenant
-	Logs          []*JobRunLog
+	RunInstances  []*JobRunLog
+}
+
+// GetScheduleType enum
+func (s *Schedule) GetScheduleType() ScheduleType {
+	return ScheduleType(s.ScheduleType)
 }

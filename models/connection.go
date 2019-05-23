@@ -29,7 +29,7 @@ func CreateDB(dialect, connStr string) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	db.AutoMigrate(&User{}, &Tenant{}, &Solution{}, &JobRunLog{}, &Schedule{})
+	db.AutoMigrate(&User{}, &Tenant{}, &Solution{}, &JobRunLog{}, &Schedule{}, &Log{})
 
 	return db, err
 
