@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/Soontao/PDISolutionCenter/modules/pdiclients"
-	"github.com/gin-gonic/contrib/static"
 	"github.com/Soontao/PDISolutionCenter/models"
 	"github.com/Soontao/PDISolutionCenter/modules/memsession"
 	"github.com/Soontao/PDISolutionCenter/modules/oauth"
+	"github.com/Soontao/PDISolutionCenter/modules/pdiclients"
 	"github.com/Soontao/PDISolutionCenter/routes"
 	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli"
 )
@@ -28,7 +28,7 @@ func RunServer(c *cli.Context) (err error) {
 	// with in memory session
 	memsession.WithMemSession(r)
 
-	// oauth config
+	// OAuth config
 	oConfig := &oauth.ServerOAuthConfig{
 		AuthURL:      c.GlobalString("oauth_auth_url"),
 		TokenURL:     c.GlobalString("oauth_token_url"),
@@ -37,10 +37,25 @@ func RunServer(c *cli.Context) (err error) {
 		ClientSecret: c.GlobalString("oauth_client_secret"),
 		CallbackPath: "/oauth/callback",
 		OnUserReceived: func(c *gin.Context, u oauth.SSOUser) (rt error) {
+
 			session := sessions.Default(c)
+
+			fedID := u.GetFederationID()
+
 			// set fed id
-			session.Set(oauth.KeyFedID, u.GetFederationID())
+			session.Set(oauth.KeyFedID, fedID)
 			session.Save()
+
+			// sync user to db
+			user := &models.User{}
+			query := &models.User{FederationLoginID: fedID}
+			update := &models.User{
+				Email:     u.GetEmail(),
+				BaseModel: models.BaseModel{Name: u.GetUserName()},
+			}
+
+			rt = db.Where(query).Assign(update).FirstOrCreate(user).Error
+
 			return rt
 		},
 		OnCheckUser: func(c *gin.Context) (rt bool) {
