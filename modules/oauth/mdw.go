@@ -87,6 +87,7 @@ func WithOAuth(e *gin.Engine, config *ServerOAuthConfig) (rt error) {
 		} else {
 			// set state as original request uri
 			c.Redirect(302, oauth2Config.AuthCodeURL(c.Request.RequestURI))
+			c.Abort()
 		}
 
 	})

@@ -41,8 +41,9 @@ func WithContext(db *gorm.DB, pdi *pdiclients.PDIClients, endpoint ContextEndpoi
 }
 
 // GetCurrentUser information
-func (c *RouteContext) GetCurrentUser() (rt *models.User) {
+func (c *RouteContext) GetCurrentUser() ( *models.User) {
 	ssoID := c.Session.Get(oauth.KeyFedID).(string)
+	rt := &models.User{}
 	c.DB.Where(&models.User{FederationLoginID: ssoID}).First(rt)
 	return rt
 }
