@@ -6,3 +6,4 @@ debug
 build
 
 # env file
+.env
