@@ -17,6 +17,13 @@ type PDIClientInfo struct {
 	client   *pdiutil.PDIClient
 }
 
+// NewPDIClients instance
+func NewPDIClients() *PDIClients {
+	return &PDIClients{
+		clients: map[string]*PDIClientInfo{},
+	}
+}
+
 // GetPDIClient ref
 func (info *PDIClientInfo) GetPDIClient() *pdiutil.PDIClient {
 	return info.client
@@ -40,9 +47,10 @@ func (cs *PDIClients) GetOrAddNewClient(host, username, password string) (client
 		// create new mapping
 		info = &PDIClientInfo{username, password, host, nil}
 		// pdi will auth detect the release version
-		info.client, err = pdiutil.NewPDIClient(username, password, host, "")
-		cs.clients[host] = info
-		client = info.client
+		if info.client, err = pdiutil.NewPDIClient(username, password, host, ""); err == nil {
+			cs.clients[host] = info
+			client = info.client
+		}
 	}
 	return client, err
 }

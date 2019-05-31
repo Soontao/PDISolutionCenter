@@ -15,9 +15,11 @@ import (
 // RunServer func
 func RunServer(c *cli.Context) (err error) {
 
-	clients := &pdiclients.PDIClients{}
+	clients := pdiclients.NewPDIClients()
 
 	db, err := models.CreateDB(c.GlobalString("db_type"), c.GlobalString("db_conn"))
+
+	db.LogMode(c.GlobalBool("show_sql"))
 
 	if err != nil {
 		return err

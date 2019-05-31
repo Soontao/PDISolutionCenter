@@ -38,4 +38,8 @@ var options = []cli.Flag{
 		EnvVar: "STATIC_PATH",
 		Value:  "./static",
 	},
+	cli.BoolFlag{
+		Name:   "show_sql",
+		EnvVar: "SHOW_SQL",
+	},
 }
