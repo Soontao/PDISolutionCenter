@@ -33,4 +33,9 @@ var options = []cli.Flag{
 		EnvVar: "DATABASE_CONNSTR",
 		Value:  ":memory:",
 	},
+	cli.StringFlag{
+		Name:   "static_path",
+		EnvVar: "STATIC_PATH",
+		Value:  "./static",
+	},
 }

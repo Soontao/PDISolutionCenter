@@ -77,7 +77,7 @@ func RunServer(c *cli.Context) (err error) {
 	routes.WithRoutes(r, db, clients)
 
 	// with static sources
-	r.Use(static.Serve("/", static.LocalFile("./static", true)))
+	r.Use(static.Serve("/", static.LocalFile(c.GlobalString("static_path"), true)))
 
 	// start server
 	err = r.Run("0.0.0.0:18080")
