@@ -7,3 +7,5 @@ build
 
 # env file
 .env
+# test db
+*.db

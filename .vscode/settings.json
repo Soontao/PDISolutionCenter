@@ -1,6 +1,7 @@
 {
   "go.formatTool": "goimports",
   "cSpell.words": [
+    "CONNSTR",
     "OAUTH",
     "gorm",
     "pdiclients",

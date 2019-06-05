@@ -8,4 +8,6 @@ type Solution struct {
 	RecentCheckMessage string `gorm:"size:10240"`
 	Contact            string
 	ContactEmail       string
+	PatchSolution      bool
+	Tenant             *Tenant `gorm:"many2many:tenant_solution_rel;"`
 }

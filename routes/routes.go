@@ -23,6 +23,7 @@ func WithRoutes(e *gin.Engine, db *gorm.DB, clients *pdiclients.PDIClients) {
 	// tenant group
 	tenantGroup := api.Group("/tenant")
 	tenantGroup.GET("/", Wrapper(GetCurrentUserTenant))
+	tenantGroup.GET("/:id", Wrapper(GetTenantDetails))
 	tenantGroup.PUT("/", Wrapper(AddNewTenant))
 
 }

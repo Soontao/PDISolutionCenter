@@ -1,6 +1,10 @@
 package routes
 
 import (
+	"strconv"
+
+	"github.com/jinzhu/gorm"
+
 	"github.com/Soontao/PDISolutionCenter/models"
 )
 
@@ -39,25 +43,7 @@ func AddNewTenant(c *RouteContext) {
 		return
 	}
 
-	// save solution list
-
-	solutions := []*models.Solution{}
-
-	for _, s := range pdi.GetSolutionsAPI() {
-		s := &models.Solution{
-			BaseModel: models.BaseModel{
-				Name:        s.Name,
-				Description: s.Description,
-				UpdatedBy:   currentUser,
-				CreatedBy:   currentUser,
-			},
-			Contact:       s.Contact,
-			ContactEmail:  s.Email,
-			CurrentStatus: s.Status,
-		}
-		c.DB.Create(s)
-		solutions = append(solutions, s)
-	}
+	tx := c.DB.Begin()
 
 	// add refresh jobs
 
@@ -73,11 +59,61 @@ func AddNewTenant(c *RouteContext) {
 		TenantUserPassword: payload.Password,
 	}
 
-	c.DB.Save(t)
+	tx.Save(t)
 
-	c.DB.Model(t).Association("Solutions").Append(solutions)
+	// save solution list
 
-	c.DB.Model(t).Association("Admins").Append(currentUser)
+	for _, s := range pdi.GetSolutionsAPI() {
+
+		status := pdi.GetSolutionStatus(s.Name)
+
+		s := &models.Solution{
+			BaseModel: models.BaseModel{
+				Name:        s.Name,
+				Description: s.Description,
+				UpdatedBy:   currentUser,
+				CreatedBy:   currentUser,
+			},
+			CurrentVersion: int(status.Version),
+			PatchSolution:  s.PatchSolution,
+			Contact:        s.Contact,
+			ContactEmail:   s.Email,
+			CurrentStatus:  s.Status,
+		}
+
+		tx.Create(s)
+
+		tx.Model(t).Association("Solutions").Append(s)
+
+	}
+
+	tx.Model(t).Association("Admins").Append(currentUser)
+
+	tx.Commit()
 
 	c.HTTP.JSON(201, PlainJSONObject{"successful": true})
+
+}
+
+// GetTenantDetails endpoint
+func GetTenantDetails(c *RouteContext) {
+
+	tenant := &models.Tenant{}
+
+	if tenantID, err := strconv.ParseUint(c.HTTP.Param("id"), 10, 32); err != nil {
+		c.HTTP.AbortWithStatusJSON(500, PlainJSONObject{"error": err.Error()})
+		return
+	} else {
+		if err = c.DB.Preload("Solutions").Preload("Admins").First(tenant, tenantID).Error; err != nil {
+			if gorm.IsRecordNotFoundError(err) {
+				c.HTTP.AbortWithStatusJSON(404, PlainJSONObject{"error": err.Error()})
+			} else {
+				c.HTTP.AbortWithStatusJSON(500, PlainJSONObject{"error": err.Error()})
+			}
+			return
+		}
+		c.HTTP.JSON(200, tenant)
+		return
+	}
+
 }

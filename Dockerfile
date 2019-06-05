@@ -15,14 +15,20 @@ COPY . .
 RUN go build -mod=vendor -o=app .
 
 # fetch frontend release
-RUN wget https://github.com/Soontao/PDISolutionCenterFront/releases/download/v1.5.0/dist.zip
+RUN wget https://github.com/Soontao/PDISolutionCenterFront/releases/download/v1.6.0/dist.zip
 RUN unzip dist.zip
 
 # distribution image
 FROM alpine:3.9
 
+# volume
+VOLUME /data
+
 # add CAs
 RUN apk --no-cache add ca-certificates
+
+# default persist
+ENV DATABASE_CONNSTR /data/data.db
 
 COPY --from=build-env /app/app .
 COPY --from=build-env /app/dist ./static
