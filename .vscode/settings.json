@@ -4,6 +4,7 @@
     "CONNSTR",
     "OAUTH",
     "gorm",
+    "jinzhu",
     "pdiclients",
     "sqlite"
   ]

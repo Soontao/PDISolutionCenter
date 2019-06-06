@@ -6,6 +6,7 @@ import (
 	"github.com/Soontao/PDISolutionCenter/modules/oauth"
 	"github.com/Soontao/PDISolutionCenter/modules/pdiclients"
 	"github.com/Soontao/PDISolutionCenter/routes"
+	"github.com/Soontao/PDISolutionCenter/services"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
@@ -24,6 +25,13 @@ func RunServer(c *cli.Context) (err error) {
 	if err != nil {
 		return err
 	}
+
+	ss, err := services.NewServices(db)
+
+	if err != nil {
+		return err
+	}
+
 	// new server instance
 	r := gin.Default()
 
@@ -76,7 +84,7 @@ func RunServer(c *cli.Context) (err error) {
 	oauth.WithOAuth(r, oConfig)
 
 	// mount all routes
-	routes.WithRoutes(r, db, clients)
+	routes.WithRoutes(r, db, clients, ss)
 
 	// with static sources
 	r.Use(static.Serve("/", static.LocalFile(c.GlobalString("static_path"), true)))

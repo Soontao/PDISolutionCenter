@@ -2,15 +2,16 @@ package routes
 
 import (
 	"github.com/Soontao/PDISolutionCenter/modules/pdiclients"
+	"github.com/Soontao/PDISolutionCenter/services"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
 
 // WithRoutes func
-func WithRoutes(e *gin.Engine, db *gorm.DB, clients *pdiclients.PDIClients) {
+func WithRoutes(e *gin.Engine, db *gorm.DB, clients *pdiclients.PDIClients, ss *services.Services) {
 
 	Wrapper := func(e ContextEndpointFunc) gin.HandlerFunc {
-		return WithContext(db, clients, e)
+		return WithContext(db, clients, e, ss)
 	}
 
 	// api root

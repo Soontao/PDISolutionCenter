@@ -5,9 +5,12 @@ go 1.12
 require (
 	cloud.google.com/go v0.39.0 // indirect
 	github.com/DataDog/zstd v1.4.0 // indirect
+	github.com/Fs02/wire v1.0.2
 	github.com/OneOfOne/xxhash v1.2.5 // indirect
 	github.com/Shopify/sarama v1.22.1 // indirect
 	github.com/Soontao/pdi-util v0.0.0-20190530074054-9a1e2e2e437c
+	github.com/bamzi/jobrunner v0.0.0-20161019143021-273175f8b6eb
+	github.com/defval/inject v1.1.1
 	github.com/denisenkom/go-mssqldb v0.0.0-20190515213511-eb9f6a1743f3 // indirect
 	github.com/dgryski/go-sip13 v0.0.0-20190329191031-25c5027a8c7b // indirect
 	github.com/gin-contrib/sessions v0.0.0-20190512062852-3cb4c4f2d615
@@ -27,6 +30,7 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/kr/pty v1.1.4 // indirect
 	github.com/lib/pq v1.1.1 // indirect
+	github.com/magic003/alice v0.0.0-20170426062316-2087f8381114
 	github.com/mattn/go-isatty v0.0.8 // indirect
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.5.0 // indirect
@@ -53,5 +57,6 @@ require (
 	google.golang.org/appengine v1.6.0 // indirect
 	google.golang.org/genproto v0.0.0-20190522204451-c2c4e71fbf69 // indirect
 	google.golang.org/grpc v1.21.0 // indirect
+	gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5
 	honnef.co/go/tools v0.0.0-20190522022531-bad1bd262ba8 // indirect
 )

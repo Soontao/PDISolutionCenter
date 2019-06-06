@@ -1,7 +1,5 @@
 package models
 
-import "time"
-
 // ScheduleType enum
 type ScheduleType string
 
@@ -19,15 +17,21 @@ const (
 // Schedule type
 type Schedule struct {
 	BaseModel
-	ScheduleType  string
-	PeriodCron    string
-	TargetRunTime *time.Time
-	Solution      *Solution
-	TargetTenant  *Tenant
-	RunInstances  []*JobRunLog
+	ScheduleType    string
+	PeriodCron      string
+	Solution        *Solution
+	TargetTenant    *Tenant
+	RunInstances    []*JobRunLog
+	Enable          bool
+	ServerRuntimeID int
 }
 
 // GetScheduleType enum
 func (s *Schedule) GetScheduleType() ScheduleType {
 	return ScheduleType(s.ScheduleType)
+}
+
+// Run func
+func (s Schedule) Run() {
+
 }

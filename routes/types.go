@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/Soontao/PDISolutionCenter/services"
 	"github.com/Soontao/PDISolutionCenter/models"
 	"github.com/Soontao/PDISolutionCenter/modules/oauth"
 	"github.com/Soontao/PDISolutionCenter/modules/pdiclients"
@@ -25,16 +26,19 @@ type RouteContext struct {
 	Session sessions.Session
 	// PDI Clients
 	PDI *pdiclients.PDIClients
+	// Services
+	Services *services.Services
 }
 
 // WithContext func
-func WithContext(db *gorm.DB, pdi *pdiclients.PDIClients, endpoint ContextEndpointFunc) gin.HandlerFunc {
+func WithContext(db *gorm.DB, pdi *pdiclients.PDIClients, endpoint ContextEndpointFunc, ss *services.Services) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx := &RouteContext{
 			HTTP:    c,
 			DB:      db,
 			Session: sessions.Default(c),
 			PDI:     pdi,
+			Services:ss,
 		}
 		endpoint(ctx)
 	}
