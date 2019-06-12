@@ -90,7 +90,7 @@ func RunServer(c *cli.Context) (err error) {
 	r.Use(static.Serve("/", static.LocalFile(c.GlobalString("static_path"), true)))
 
 	// start server
-	err = r.Run("0.0.0.0:18080")
+	err = r.Run("127.0.0.1:18080")
 
 	return err
 }

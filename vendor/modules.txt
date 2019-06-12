@@ -122,5 +122,7 @@ google.golang.org/appengine/internal/log
 google.golang.org/appengine/internal/remote_api
 # gopkg.in/go-playground/validator.v8 v8.18.2
 gopkg.in/go-playground/validator.v8
+# gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5
+gopkg.in/robfig/cron.v2
 # gopkg.in/yaml.v2 v2.2.2
 gopkg.in/yaml.v2

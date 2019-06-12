@@ -2,7 +2,7 @@ package services
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/magic003/alice"
+	"gopkg.in/robfig/cron.v2"
 )
 
 // Service interface
@@ -12,7 +12,6 @@ type Service interface {
 
 // Services type
 type Services struct {
-	alice.BaseModule
 	PDIService      *PDIService
 	ScheduleService *ScheduleService
 }
@@ -22,11 +21,19 @@ func NewServices(db *gorm.DB) (*Services, error) {
 
 	services := &Services{}
 
-	pdiService := &PDIService{}
+	pdiService := &PDIService{
+		db:       db,
+		services: services,
+	}
 
-	scheduleService := &ScheduleService{}
+	scheduleService := &ScheduleService{
+		db:       db,
+		cron:     cron.New(),
+		services: services,
+	}
 
-	alice.CreateContainer(services, pdiService, scheduleService)
+	services.PDIService = pdiService
+	services.ScheduleService = scheduleService
 
 	return services, nil
 
