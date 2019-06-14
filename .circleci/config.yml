@@ -6,7 +6,7 @@ jobs:
       - image: dmoscrop/circleci-sonar-scanner-docker
     steps:
       - checkout
-      - run: sonar-scanner -Dsonar.projectKey=Soontao_PDISolutionCenter -Dsonar.organization=soontao-github -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io  -Dsonar.login=7f2974d6793e7395727658a1140fe7844e9a5cb4
+      - run: sonar-scanner -Dsonar.projectKey=Soontao_PDISolutionCenter -Dsonar.organization=soontao-github -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io  -Dsonar.login=7f2974d6793e7395727658a1140fe7844e9a5cb4 -Dsonar.c.file.suffixes=- -Dsonar.cpp.file.suffixes=- -Dsonar.objc.file.suffixes=-
 
   test:
     docker:
