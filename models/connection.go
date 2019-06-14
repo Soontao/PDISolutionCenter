@@ -31,6 +31,9 @@ func CreateDB(dialect, connStr string) (*gorm.DB, error) {
 
 	db.AutoMigrate(&User{}, &Tenant{}, &Solution{}, &JobRunLog{}, &Schedule{}, &Log{})
 
+	// auto preload mode
+	db.Set("gorm:auto_preload", true)
+
 	return db, err
 
 }

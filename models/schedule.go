@@ -30,8 +30,3 @@ type Schedule struct {
 func (s *Schedule) GetScheduleType() ScheduleType {
 	return ScheduleType(s.ScheduleType)
 }
-
-// Run func
-func (s Schedule) Run() {
-
-}

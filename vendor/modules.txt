@@ -33,7 +33,7 @@ baliance.com/gooxml/schema/soo/ofc/math
 baliance.com/gooxml/schema/soo/schemaLibrary
 # github.com/Jeffail/tunny v0.0.0-20181108205650-4921fff29480
 github.com/Jeffail/tunny
-# github.com/Soontao/pdi-util v0.0.0-20190530074054-9a1e2e2e437c
+# github.com/Soontao/pdi-util v0.0.0-20190614042148-447cb3526c14
 github.com/Soontao/pdi-util
 github.com/Soontao/pdi-util/ast
 github.com/Soontao/pdi-util/ast/types

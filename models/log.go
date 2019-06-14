@@ -15,10 +15,10 @@ const (
 // Log type
 type Log struct {
 	BaseModel
-	// the sequence of log
-	Sequence int
 	// log level
 	Level string
+	// log message
+	Message string `gorm:"size:10240"`
 }
 
 // GetLevel of log
