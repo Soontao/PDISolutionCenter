@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 // ScheduleType enum
 type ScheduleType string
 
@@ -17,8 +19,13 @@ const (
 // Schedule type
 type Schedule struct {
 	BaseModel
-	ScheduleType    string
-	PeriodCron      string
+
+	ScheduleType string
+	PeriodCron   string
+
+	OneTimeSchedule         bool
+	OneTimeScheduleDateTime *time.Time
+
 	Solution        *Solution
 	TargetTenant    *Tenant
 	RunInstances    []*JobRunLog

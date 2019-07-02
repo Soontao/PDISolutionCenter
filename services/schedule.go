@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/Soontao/PDISolutionCenter/models"
 	"github.com/jinzhu/gorm"
@@ -18,18 +19,7 @@ type ScheduleService struct {
 
 // init service
 func (s ScheduleService) init() {
-
-	jobs := []*models.Schedule{}
-
-	s.db.Find(jobs)
-
-	// recover jobs from DB
-	for _, job := range jobs {
-		jobRunTimeID, _ := s.cron.AddFunc(job.PeriodCron, s.CreateRunningFunc(job))
-		job.ServerRuntimeID = int(jobRunTimeID)
-		s.db.Save(job)
-	}
-
+	// do nothing
 }
 
 // newJobRunning object
@@ -91,7 +81,7 @@ func (s ScheduleService) CreateRunningFunc(job *models.Schedule) func() {
 		sourceTenant, err := s.services.PDIService.GetPDIClient(job.Solution.Tenant)
 
 		if err != nil {
-			setJobRunTotalFailed(s.db, jobRun, err)
+			setJobFailed(err.Error())
 			return
 		}
 
@@ -182,14 +172,30 @@ func (s ScheduleService) AddJob(job *models.Schedule) (*models.Schedule, error) 
 		return nil, err
 	}
 
-	jobRunningID, err := s.cron.AddFunc(job.PeriodCron, s.CreateRunningFunc(job))
+	go func() {
+		// wait
+		time.Sleep(time.Until(*job.OneTimeScheduleDateTime))
+		// run
+		s.CreateRunningFunc(job)()
 
-	if err != nil {
-		return nil, err
-	}
+	}()
 
-	job.ServerRuntimeID = int(jobRunningID)
 	s.db.Save(job)
+
+	return job, nil
+}
+
+func (s ScheduleService) DeleteJob(job *models.Schedule) (*models.Schedule, error) {
+
+	return job, nil
+}
+
+func (s ScheduleService) DisableJob(job *models.Schedule) (*models.Schedule, error) {
+
+	return job, nil
+}
+
+func (s ScheduleService) EnableJob(job *models.Schedule) (*models.Schedule, error) {
 
 	return job, nil
 }

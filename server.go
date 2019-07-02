@@ -7,7 +7,6 @@ import (
 	"github.com/Soontao/PDISolutionCenter/modules/pdiclients"
 	"github.com/Soontao/PDISolutionCenter/routes"
 	"github.com/Soontao/PDISolutionCenter/services"
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli"
@@ -40,44 +39,14 @@ func RunServer(c *cli.Context) (err error) {
 
 	// OAuth config
 	oConfig := &oauth.ServerOAuthConfig{
-		AuthURL:      c.GlobalString("oauth_auth_url"),
-		TokenURL:     c.GlobalString("oauth_token_url"),
-		UserAPI:      c.GlobalString("oauth_user_api"),
-		ClientID:     c.GlobalString("oauth_client_id"),
-		ClientSecret: c.GlobalString("oauth_client_secret"),
-		CallbackPath: "/oauth/callback",
-		OnUserReceived: func(c *gin.Context, u oauth.SSOUser) (rt error) {
-
-			session := sessions.Default(c)
-
-			fedID := u.GetFederationID()
-
-			// set fed id
-			session.Set(oauth.KeyFedID, fedID)
-			session.Save()
-
-			// sync user to db
-			user := &models.User{}
-			query := &models.User{FederationLoginID: fedID}
-			update := &models.User{
-				Email:     u.GetEmail(),
-				BaseModel: models.BaseModel{Name: u.GetUserName()},
-			}
-
-			rt = db.Where(query).Assign(update).FirstOrCreate(user).Error
-
-			return rt
-		},
-		OnCheckUser: func(c *gin.Context) (rt bool) {
-			session := sessions.Default(c)
-			if session.Get(oauth.KeyFedID) == nil {
-				rt = false
-			} else {
-				// do more check
-				rt = true
-			}
-			return rt
-		},
+		AuthURL:        c.GlobalString("oauth_auth_url"),
+		TokenURL:       c.GlobalString("oauth_token_url"),
+		UserAPI:        c.GlobalString("oauth_user_api"),
+		ClientID:       c.GlobalString("oauth_client_id"),
+		ClientSecret:   c.GlobalString("oauth_client_secret"),
+		CallbackPath:   "/oauth/callback",
+		OnUserReceived: routes.CreateOAuthOnUserReceived(db),
+		OnCheckUser:    routes.OAuthOnCheckUser,
 	}
 
 	// with oauth config

@@ -42,4 +42,8 @@ var options = []cli.Flag{
 		Name:   "show_sql",
 		EnvVar: "SHOW_SQL",
 	},
+	cli.BoolFlag{
+		Name:   "no_auth_check",
+		EnvVar: "NO_AUTH_CHECK",
+	},
 }
